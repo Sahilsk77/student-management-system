@@ -22,10 +22,10 @@ const handleSubmit = async()=>{
 
   try{
     if(data.id){
-      await axios.put(`http://localhost:5000/updateStudent/${data.id}`, data);
+      await axios.put(`https://your-backend.onrender.com/updateStudent/${data.id}`, data);
       alert("Student Updated Successfully");
     } else {
-      await axios.post("http://127.0.0.1:5000/addStudent", data);
+      await axios.post("https://your-backend.onrender.com/addStudent", data);
       alert("Student Added Successfully");
     }
 

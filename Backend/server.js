@@ -1,6 +1,11 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, ()=>{
+  console.log("Server running");
+});
 
 const app = express();
 app.use(cors());
@@ -8,15 +13,18 @@ app.use(express.json());
 
 // MySQL connection
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "mysql.railway.internal",
   user: "root",
-  password: "student",
-  database: "studentdb"
+  password: "uCHahogaBJkFMhkxJYBYZuwRZMBfGUCS",
+  database: "railway"
 });
 
-db.connect(err => {
-  if(err) console.log(err);
-  else console.log("MySQL Connected");
+db.connect((err)=>{
+  if(err){
+    console.log("DB Error:", err);
+  } else {
+    console.log("Railway DB Connected");
+  }
 });
 
 app.listen(5000, ()=>console.log("Server running"));
