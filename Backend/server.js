@@ -1,22 +1,19 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
-const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, ()=>{
-  console.log("Server running");
-});
+const app = express();   // ✅ FIRST create app
 
-const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MySQL connection
+// DB connection (Railway)
 const db = mysql.createConnection({
-  host: "mysql.railway.internal",
-  user: "root",
-  password: "uCHahogaBJkFMhkxJYBYZuwRZMBfGUCS",
-  database: "railway"
+  host: process.env.MYSQLHOST || "mysql.railway.internal",
+  user: process.env.MYSQLUSER || "root",
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE || "railway",
+  port: process.env.MYSQLPORT || 3306
 });
 
 db.connect((err)=>{
@@ -27,12 +24,8 @@ db.connect((err)=>{
   }
 });
 
-app.listen(5000, ()=>console.log("Server running"));
-
+// Routes
 app.post("/addStudent", (req,res)=>{
-  console.log("API HIT");         
-  console.log(req.body);          
-
   const {name,email,course,phone,status} = req.body;
 
   const sql = `
@@ -42,7 +35,7 @@ app.post("/addStudent", (req,res)=>{
 
   db.query(sql,[name,email,course,phone,status], (err,result)=>{
     if(err){
-      console.log(err);           
+      console.log(err);
       return res.send(err);
     }
     res.send("Student Added");
@@ -87,4 +80,11 @@ app.get("/activeStudents", (req,res)=>{
     if(err) return res.send(err);
     res.json(result);
   });
+});
+
+// ✅ ONLY ONE listen (at end)
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, ()=>{
+  console.log("Server running on port", PORT);
 });
