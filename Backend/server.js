@@ -7,6 +7,10 @@ const app = express();   // ✅ FIRST create app
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Backend working ✅");
+});
+
 // DB connection (Railway)
 const db = mysql.createConnection({
   host: process.env.MYSQLHOST || "mysql.railway.internal",
@@ -82,7 +86,6 @@ app.get("/activeStudents", (req,res)=>{
   });
 });
 
-// ✅ ONLY ONE listen (at end)
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, ()=>{
