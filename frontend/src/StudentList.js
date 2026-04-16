@@ -1,24 +1,44 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// ✅ Your backend URL (same as StudentForm)
+const API = "https://student-management-system-production-37a8.up.railway.app";
+
 function StudentList(){
 
   const [students,setStudents] = useState([]);
   const [search,setSearch] = useState("");
 
-  useEffect(()=>{
-    axios.get("https://student-management-system-production-37a8.up.railway.app/students")
-    .then(res=>setStudents(res.data));
-  },[]);
-
-  const deleteStudent = async(id)=>{
-    await axios.delete(`https://student-management-system-production-37a8.up.railway.app/deleteStudent/${id}`);
-    alert("Deleted");
-    window.location.reload();
+  // 🔄 Fetch students
+  const fetchStudents = ()=>{
+    axios.get(`${API}/students`)
+    .then(res=>{
+      setStudents(res.data);
+    })
+    .catch(err=>{
+      console.log(err);
+      alert("Error fetching students");
+    });
   };
 
+  useEffect(()=>{
+    fetchStudents();
+  },[]);
+
+  // 🗑 Delete student
+  const deleteStudent = async(id)=>{
+    try{
+      await axios.delete(`${API}/deleteStudent/${id}`);
+      alert("Deleted Successfully");
+      fetchStudents(); // ✅ no reload needed
+    } catch(err){
+      console.log(err);
+      alert("Delete failed");
+    }
+  };
+
+  // ✏️ Edit student
   const handleEdit = (student)=>{
-    console.log(student);
     localStorage.setItem("editStudent", JSON.stringify(student));
     window.location.reload();
   };
@@ -27,7 +47,7 @@ function StudentList(){
     <div className="card p-4">
       <h2>Student List</h2>
 
-      {/* Search Input */}
+      {/* 🔍 Search */}
       <input 
         className="form-control mb-3"
         placeholder="Search by name..."
@@ -47,9 +67,9 @@ function StudentList(){
 
         <tbody>
         {students
-          .filter((s)=>{
-            return s.name.toLowerCase().includes(search.toLowerCase());
-          })
+          .filter((s)=>
+            s.name.toLowerCase().includes(search.toLowerCase())
+          )
           .map((s)=>(
           <tr key={s.id}>
             <td>{s.name}</td>
@@ -72,7 +92,6 @@ function StudentList(){
                 Delete
               </button>
             </td>
-
           </tr>
         ))}
         </tbody>

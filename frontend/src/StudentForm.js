@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+// ✅ YOUR LIVE BACKEND URL
+const API = "https://student-management-system-production-37a8.up.railway.app";
+
 function StudentForm(){
 
 const [data,setData] = useState({
@@ -22,16 +25,18 @@ const handleSubmit = async()=>{
 
   try{
     if(data.id){
-      await axios.put(`https://your-backend.onrender.com/updateStudent/${data.id}`, data);
+      // ✅ UPDATE
+      await axios.put(`${API}/updateStudent/${data.id}`, data);
       alert("Student Updated Successfully");
     } else {
-      await axios.post("https://your-backend.onrender.com/addStudent", data);
+      // ✅ ADD
+      await axios.post(`${API}/addStudent`, data);
       alert("Student Added Successfully");
     }
 
     localStorage.removeItem("editStudent");
 
-    // clear form FIRST
+    // clear form
     setData({
       id:null,
       name:"",
@@ -41,7 +46,7 @@ const handleSubmit = async()=>{
       status:"ACTIVE"
     });
 
-    // then reload (only once)
+    // reload once
     setTimeout(()=>{
       window.location.reload();
     },300);
@@ -51,6 +56,7 @@ const handleSubmit = async()=>{
     alert("Error occurred");
   }
 };
+
 useEffect(()=>{
   const editData = JSON.parse(localStorage.getItem("editStudent"));
   if(editData){
@@ -62,15 +68,44 @@ return(
 <div className="card p-4 mb-4">
 <h2>Add Student</h2>
 
-<input className="form-control mb-2" name="name" value={data.name} onChange={handleChange} placeholder="Name"/>
+<input 
+  className="form-control mb-2" 
+  name="name" 
+  value={data.name} 
+  onChange={handleChange} 
+  placeholder="Name"
+/>
 
-<input className="form-control mb-2" name="email" value={data.email} onChange={handleChange} placeholder="Email"/>
+<input 
+  className="form-control mb-2" 
+  name="email" 
+  value={data.email} 
+  onChange={handleChange} 
+  placeholder="Email"
+/>
 
-<input className="form-control mb-2" name="course" value={data.course} onChange={handleChange} placeholder="Course"/>
+<input 
+  className="form-control mb-2" 
+  name="course" 
+  value={data.course} 
+  onChange={handleChange} 
+  placeholder="Course"
+/>
 
-<input className="form-control mb-2" name="phone" value={data.phone} onChange={handleChange} placeholder="Phone"/>
+<input 
+  className="form-control mb-2" 
+  name="phone" 
+  value={data.phone} 
+  onChange={handleChange} 
+  placeholder="Phone"
+/>
 
-<select className="form-control mb-2" name="status" value={data.status} onChange={handleChange}>
+<select 
+  className="form-control mb-2" 
+  name="status" 
+  value={data.status} 
+  onChange={handleChange}
+>
 <option value="ACTIVE">ACTIVE</option>
 <option value="INACTIVE">INACTIVE</option>
 </select>
@@ -78,10 +113,7 @@ return(
 <button 
   className="btn btn-primary"
   type="button"
-  onClick={()=>{
-    console.log("Button clicked");   // 👈 DEBUG
-    handleSubmit();
-  }}
+  onClick={handleSubmit}
 >
 {data.id ? "Update Student" : "Add Student"}
 </button>

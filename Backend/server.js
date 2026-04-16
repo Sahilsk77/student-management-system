@@ -13,11 +13,14 @@ app.get("/", (req, res) => {
 
 // DB connection (Railway)
 const db = mysql.createConnection({
-  host: process.env.MYSQLHOST || "mysql.railway.internal",
-  user: process.env.MYSQLUSER || "root",
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE || "railway",
-  port: process.env.MYSQLPORT || 3306
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 db.connect((err)=>{
@@ -86,7 +89,7 @@ app.get("/activeStudents", (req,res)=>{
   });
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port", PORT);
