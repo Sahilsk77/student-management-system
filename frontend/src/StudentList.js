@@ -7,12 +7,12 @@ function StudentList(){
   const [search,setSearch] = useState("");
 
   useEffect(()=>{
-    axios.get("http://localhost:5000/students")
+    axios.get("https://student-management-system-production-37a8.up.railway.app/students")
     .then(res=>setStudents(res.data));
   },[]);
 
   const deleteStudent = async(id)=>{
-    await axios.delete(`http://localhost:5000/deleteStudent/${id}`);
+    await axios.delete(`https://student-management-system-production-37a8.up.railway.app/deleteStudent/${id}`);
     alert("Deleted");
     window.location.reload();
   };
