@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// ✅ YOUR LIVE BACKEND URL
+// ✅ LIVE BACKEND URL
 const API = "https://student-management-system-production-37a8.up.railway.app";
 
 function StudentForm(){
@@ -20,23 +20,27 @@ const handleChange = (e)=>{
 };
 
 const handleSubmit = async()=>{
-  console.log("Button clicked");   
-  console.log(data);               
+  console.log("Submitting:", data);
 
   try{
+    let res;
+
     if(data.id){
       // ✅ UPDATE
-      await axios.put(`${API}/updateStudent/${data.id}`, data);
+      res = await axios.put(`${API}/updateStudent/${data.id}`, data);
       alert("Student Updated Successfully");
     } else {
       // ✅ ADD
-      await axios.post(`${API}/addStudent`, data);
+      res = await axios.post(`${API}/addStudent`, data);
       alert("Student Added Successfully");
     }
 
+    console.log("Response:", res.data);  // 👈 DEBUG
+
+    // clear edit state
     localStorage.removeItem("editStudent");
 
-    // clear form
+    // reset form
     setData({
       id:null,
       name:"",
@@ -46,14 +50,12 @@ const handleSubmit = async()=>{
       status:"ACTIVE"
     });
 
-    // reload once
-    setTimeout(()=>{
-      window.location.reload();
-    },300);
+    // ✅ better than reload
+    window.location.reload();
 
   } catch(err){
-    console.log(err);
-    alert("Error occurred");
+    console.log("ERROR:", err);   // 👈 IMPORTANT
+    alert("Error occurred. Check console.");
   }
 };
 

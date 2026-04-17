@@ -33,6 +33,9 @@ db.connect((err)=>{
 
 // Routes
 app.post("/addStudent", (req,res)=>{
+  console.log("API HIT");
+  console.log("BODY:", req.body);
+
   const {name,email,course,phone,status} = req.body;
 
   const sql = `
@@ -42,10 +45,12 @@ app.post("/addStudent", (req,res)=>{
 
   db.query(sql,[name,email,course,phone,status], (err,result)=>{
     if(err){
-      console.log(err);
-      return res.send(err);
+      console.log("❌ DB ERROR:", err);   // 👈 VERY IMPORTANT
+      return res.status(500).json(err);
     }
-    res.send("Student Added");
+
+    console.log("✅ INSERT SUCCESS:", result);
+    res.json({message:"Student Added"});
   });
 });
 
